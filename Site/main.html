@@ -1,0 +1,574 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport", content="width=device-width, initial-scale=1" />
+		
+		<link rel = "icon" href = "images/icon.png" type = "image/png">
+		<title> Сапер онлайн </title>
+		
+		<style>
+			html{
+				width: 100%;
+				display: flex;
+				justify-content: center;
+			}
+			
+			body{
+				width: 100%;
+				min-width: 300px;
+				max-width: 700px;
+				text-align: center;
+
+				user-select: none;
+			}
+
+			.login_table, .top_bar, .menu, .settings, .profile, .main_game_table, .top{
+				display: none;
+				
+				width: 100%;
+				margin: auto;
+			}
+			
+			/*Login*/
+			.login_table th{
+				width: 0%;
+				text-align: left;
+			}
+
+			.login_table td{
+				text-align: left;
+				padding-left: 10px;
+			}
+
+			.login_table input{
+				width: 100%;
+				padding: 10px;
+				border-radius: 15px;
+				box-sizing: border-box;
+			}
+
+			.login_table input[type = 'button']{
+				cursor: pointer;
+				margin-top: 10px;
+			}
+
+			/*Top bar*/
+			.top_bar{
+				margin-bottom: 10px;
+				border-bottom: 3px solid black;
+			}
+
+			/*Menu*/
+			.menu input{
+				width: 80%;
+				padding: 10px;
+				cursor: pointer;
+				border-radius: 15px;
+			}
+			
+			/*Settings*/
+			.settings input{
+				width: 100%;
+				padding: 10px;
+				border-radius: 15px;
+				box-sizing: border-box;
+			}
+
+			.settings input[type = 'button']{
+				cursor: pointer;
+			}
+
+			.settings th{
+				font-size: 20px;
+				text-align: left;
+				padding-top: 10px;
+			}
+
+			.settings td{
+				text-align: left;
+			}
+
+			/*Profile*/
+			.profile input{
+				width: 100%;
+				padding: 10px;
+				cursor: pointer;
+				border-radius: 15px;
+				box-sizing: border-box;
+			}
+
+			.profile td{
+				text-align: left;
+			}
+
+			/*Game*/
+			.main_game_table input{
+				width: 100%;
+				padding: 10px;
+				cursor: pointer;
+				border-radius: 15px;
+				box-sizing: border-box;
+			}
+			
+			.main_game_table #game_container{
+				display: grid;
+				grid-template-columns: repeat(25, 100px);
+				grid-template-rows: repeat(25, 100px);
+				gap: 0;
+
+				width: 90vw;
+				height: 60vh;
+				max-width: 700px;
+				min-width: 300px;
+
+				overflow: auto;
+				font-size: 50px;
+			}
+
+			.main_game_table #game_container div{
+				aspect-ratio: 1 / 1;
+				background-color: green;
+
+				cursor: pointer;
+				border-radius: 5px;
+
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				text-align: center;
+
+				margin: 3px;
+			}
+
+			.main_game_table #scale span{
+				width: 4vh;
+				height: 4vh;
+				margin-left: 10px;
+				background-color: brown;
+				color: white;
+				cursor: pointer;
+				border-radius: 10px;
+				font-size: 3vh;
+				
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			/*Top*/
+			.top #headers td{
+				width: 50%;
+				padding: 10px;
+				cursor: pointer;
+				border-radius: 15px;
+				border: 3px solid black;
+			}
+
+			.top #top_container{
+				width: 100%;
+				border-collapse: collapse;
+			}
+
+			.top #top_container_headers{
+				width: 100%;
+				padding: 10px;
+				padding-bottom: 5px;
+
+				display: flex;
+				box-sizing: border-box;
+				justify-content: space-between;
+			}
+
+			.top #top_container div{
+				padding: 10px;
+				cursor: pointer;
+				margin-bottom: 6px;
+				border-radius: 15px;
+				border: 3px solid black;
+
+				display: grid;
+				font-size: smaller;
+				grid-template-columns: 1fr minmax(0, auto) 1fr;
+				grid-column-gap: 20px; 
+			}
+
+			.top #top_container div span:first-child{
+				text-align: left;
+			}
+
+			.top #top_container div span:last-child{
+				text-align: right;
+			}
+
+			.top #top_menu div{
+				display: inline-block;
+				
+				padding: 10px;
+				border-radius: 10px;
+				border: 3px solid black;
+				
+				cursor: pointer;
+			}
+
+			.top input{
+				width: 100%;
+				padding: 10px;
+				cursor: pointer;
+				margin-top: 10px;
+				border-radius: 15px;
+				box-sizing: border-box;
+			}
+
+			.loading{
+				width: 100%;
+				height: 100%;
+				position: fixed;
+				
+				top: 0px;
+				left: 0px;
+
+				pointer-events: none;
+			}
+
+			.loading img{
+				width: 150px;
+				height: 150px;
+
+				border-radius: 50%;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div class = 'loading'> <img src = 'images/loading.gif'> </div>
+
+		<table class = 'login_table'>
+			<tr>
+				<th> Логін: </th>
+				<td> <input name = 'login', type = 'text', placeholder = 'Введіть логін...' onkeydown = 'moveFocus(event, `.login_table input[name = "password"]`)'> </td>
+			<tr>
+			
+			<tr>
+				<th> Пароль: </th>
+				<td> <input name = 'password', type = 'password', placeholder = 'Введіть пароль...' onkeydown = 'moveFocus(event, `.login_table input[type = "button"]`, true)'> </th>
+			<tr>
+			
+			<tr>
+				<td colspan = '2' style = 'padding-left: 0px;'> <input type = 'button', onClick = 'login_table.login();', value = 'Ввійти'> </td>
+			</tr>
+		</table>
+		
+		<table class = 'top_bar'>
+			<tr>
+				<td style = 'text-align: left;'> Логін: </td>
+				<td style = 'text-align: right; white-space: nowrap;'> Енергії: <b> <span id = 'energy'></span> </b> з 10. </td>
+			</tr>
+			<tr>
+				<td style = 'text-align: left;'> <b> <span id = 'login'></span></b> </td>
+				<td id = 'energy_timer_tr' style = 'text-align: right;'> <b id = 'energy_timer'></b> </td>
+			</tr>
+		</table>
+		
+		<table class = 'menu'>
+			<tr>
+				<td>
+					<input type='button' onClick = 'menu_table.open_game();' value = 'Грати'>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>
+					<input type='button' onClick = 'menu_table.open_next_table(profile_table);' value = 'Профіль'>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>
+					<input type='button' onClick = 'menu_table.open_next_table(top_table);' value = 'Топ'>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>
+					<input type='button' onClick = 'menu_table.open_next_table(settings_table);' value = 'Налаштування'>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type='button' onClick = 'menu_table.logout();' value = 'Вийти'>
+				</td>
+			</tr>
+		</table>
+		
+		<table class = 'settings'>
+			<tr>
+				<th colspan="2" style = 'padding-top: 0px;'> <span> Зміна логіну </span>  </th>
+			</tr>
+			<tr>
+				<td> Логін: </td>
+				<td width = 100%> <input name = 'login' type = 'text' onkeydown = 'moveFocus(event, `.settings input[name = "change_login"]`,  true)'> </td>
+			</tr>
+			<tr>
+				<td colspan = '2'> <input name = 'change_login' type = 'button', onClick = 'settings_table.change_login();', value = 'Змінити'> </td>
+			</tr>
+			
+			<tr>
+				<th colspan="2"> <span> Зміна паролю </span> </th>
+			</tr>
+			<tr>
+				<td> Старий пароль: </td>
+				<td> <input name = 'old_password', type = 'password' onkeydown = 'moveFocus(event, `.settings input[name = "new_password"]`)'> </td>
+			</tr>
+			<tr>
+				<td> Новий пароль: </td>
+				<td> <input name = 'new_password', type = 'text' onkeydown = 'moveFocus(event, `.settings input[name = "repeated_password"]`)'> </td>
+			</tr>
+			<tr>
+				<td> Підтвердження: </td>
+				<td> <input name = 'repeated_password', type = 'text' onkeydown = 'moveFocus(event, `.settings input[name = "change_password"]`, true)'> </td>
+			</tr>
+			<tr>
+				<td align = 'center', colspan="2"> <input name = 'change_password' type = 'button', onClick = 'settings_table.change_password();', value = 'Змінити'> </td>
+			</tr>
+			
+			<tr>
+				<td style = 'padding-top: 15px;', align = 'center', colspan="2"> <input type = 'button', onClick = 'settings_table.reset_sessions();', value = 'Скинути сеанси'> </td>
+			</tr>
+			
+			<tr>
+				<td align = 'center', colspan="2"> <input type = 'button', onClick = 'settings_table.back();', value = 'Назад'> </td>
+			</tr>
+		</table>
+		
+		<table class = 'profile'>
+			<tr id = 'error_table' style = 'display: none;'>
+				<td style = 'text-align: center;'>
+					Not Found. 404.
+				</td>
+			</tr>
+			
+			<tr id = 'profile_table' style = 'display: none;'>
+				<td>
+					<table style = 'display: table; border: 0px;'>
+						<tr>
+							<td>
+								ID: <b id = 'id'></b>.
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Логін: <b id = 'login'></b>.
+							</td>
+						</tr>
+						<tr>
+							<td style = 'padding-top: 10px;'>
+								Рівень: <b id = 'level'></b>.
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Досвід: <b id = 'exp'></b>.
+							</td>
+						</tr>
+						
+						<tr id = 'top_tr' style = 'display: none;'>
+							<td style = 'padding-top: 10px;'>
+								Позиції в топах:
+							</td>
+						</tr>
+						<tr id = 'season_top_tr' style = 'display: none;'>
+							<td style = 'padding-left: 20px;'>
+								Сезон: #<b id = 'season_pos'></b> — <b id = 'season_score'></b>.
+							</td>
+						</tr>
+						<tr id = 'global_top_tr' style = 'display: none;'>
+							<td style = 'padding-left: 20px;'>
+								Загальний: #<b id = 'global_pos'></b> — <b id = 'global_score'></b>.
+							</td>
+						</tr>
+			
+						<tr id = 'last_online_tr' style = 'display: none;'>
+							<td style = 'padding-top: 10px;'>
+								Останній онлайн: <b id = 'last_online'></b>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td style = 'padding-top: 10px;'> <input type = 'button', onClick = 'profile_table.back();', value = 'Назад'> </td>
+			</tr>
+		</table>
+
+		<table class = 'main_game_table'>
+			<tr>
+				<td style = 'text-align: left;'>
+					Time: <b id = 'game_timer'></b>
+				</td>
+			
+				<td style = 'text-align: right;'>
+					Score: <b id = 'game_score'></b>
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan = '2' align = 'center'>
+					<div id = 'game_container'></div>
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan = '2'>
+					<div style='display: flex; justify-content: center; margin-top: 10px;'>
+						<div style='display: grid; grid-template-columns: 1fr 1fr;'>
+							<div id = 'button_1' style='height: 10vh; aspect-ratio: 1; background-color: brown; margin-right: 3px; border-radius: 5px; cursor: pointer;' onClick = 'main_game_table.change_action(0);'></div>
+							<div id = 'button_2' style='height: 10vh; aspect-ratio: 1; background-color: black; margin-left: 3px; border-radius: 5px; cursor: pointer;' onClick = 'main_game_table.change_action(1);'></div>
+						</div>
+						<div align = 'center' id = 'scale' style = 'display: grid; grid-template-rows: 1fr 1fr;'>
+							<span onClick = 'main_game_table.scale_game(10)'>+</span>
+							<span onClick = 'main_game_table.scale_game(-10)' style = 'margin-top: -5px;'>-</span>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td align = 'center' colspan = '2' style = 'padding-top: 10px;'> <input type = 'button', onClick = 'main_game_table.back();', value = 'Назад'> </td>
+			</tr>
+		</table>
+
+		<table class = 'top'>
+			<tr>
+				<td colspan = '2' style = 'text-align: right;'>
+					<span id = 'end_of_season_span'></span>
+				</td>
+			</tr>
+			<tr id = 'headers'>
+				<td id = 'season_top' onClick = 'top_table.change_state(0, true);'> Сезонний </td>
+				<td id = 'global_top' onClick = 'top_table.change_state(1, true);'> Глобальний </td>
+			</tr>
+			<tr>
+				<td colspan = '2' align = 'center'>
+					<div id = 'top_container_headers'>
+						<div> № </div> <div> Login </div> <div> Score </div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan = '2' align = 'center'>
+					<div id = 'top_container'></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan = '2' align = 'right'>
+					<b id = 'page_number'></b>-а cторінка
+				</td>
+			</tr>
+			<tr>
+				<td colspan = '2'>
+					<div id = 'top_menu'>
+						<div id = 'back' onClick = 'top_table.update(-1);'> &larr; </div> <div onClick = 'top_table.update();'> Оновити </div> <div id = 'next' onClick = 'top_table.update(1);'> &rarr; </div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan = '2'>
+					<input type = 'button' onClick = 'top_table.back();' value = 'Назад'>
+				</td>
+			</tr>
+		</table>
+
+		<script src="scripts/Client.js?v=1.2.21.<<<1>>>"> </script>
+		
+		<script src="scripts/Storage.js?v=1.2.1.<<<8>>>"> </script>
+		
+		<script src="scripts/GameTable.js?v=1.2.13.<<<2>>>"> </script>
+		<script src="scripts/LoginTable.js?v=1.2.3.<<<3>>>"> </script>
+		
+		<script src="scripts/MenuTable.js?v=1.2.5.<<<5>>>"> </script>
+		<script src="scripts/SettingsTable.js?v=1.2.6.<<<7>>>"> </script>
+		<script src="scripts/MainGameTable.js?v=1.2.14.<<<4>>>"> </script>
+
+		<script src="scripts/ProfileTable.js?v=1.2.14.<<<6>>>"> </script>
+		<script src="scripts/TopTable.js?v=1.2.17.<<<9>>>"> </script>
+		
+		<script>
+			function start(){
+				const need_auth = localStorage.getItem('need_auth');
+				if(need_auth == null || need_auth === 'true'){
+					client.edit_loading(0);
+					login_table.open();
+				}
+				else{
+					game_table.open();
+				}
+			}
+			
+			function update_game_info(){
+				game_table.update_top_bar();
+				check_notifications();
+				
+				settings_table.update_login();
+			}
+			
+			function check_notifications(){
+				if('notifications' in client.user){
+					for(notification of client.user.notifications){ alert(notification); }
+					delete client.user['notifications'];
+				}
+			}
+			
+			function moveFocus(event, next, button = false){
+				if (event.key === "Enter"){
+					event.preventDefault();
+					const element = document.querySelector(next)
+					
+					if(button){ element.click(); }
+					else{ element.focus(); }
+				}
+			}
+			
+			function transform_digit(digit) {
+				digit = String(digit);
+				for (let i = 0; i < Math.floor((digit.length - 1) / 3); i++) {
+					const index = -(i + 1) * 3 - i;
+					digit = digit.slice(0, index) + ' ' + digit.slice(index);
+				}
+
+				return digit;
+			}
+
+			function get_time_delta(time, now = Math.floor((new Date().getTime()) / 1000), additional = null){
+				let answer = '';
+				let delta = now - time;
+				if(additional){ delta = additional - delta; }
+
+				if(delta >= 86400){ answer += `${Math.floor(delta / 86400)}д. `; }
+				if(delta >= 3600){ answer += `${Math.floor((delta % 86400) / 3600)}г. `; }
+				if(delta >= 60){ answer += `${Math.floor((delta % 3600) / 60)}хв. `; }
+
+				return `${answer}${Math.floor(delta % 60)}с.`;
+			}
+
+			function toggle(element, value = 'none'){ element.style.display = value; }
+			
+			const client = new Client();
+			
+			const game_table = new GameTable();
+			const login_table = new LoginTable();
+			
+			const menu_table = new MenuTable();
+			const settings_table = new SettingsTable();
+			const main_game_table = new MainGameTable();
+
+			const profile_table = new ProfileTable();
+			const top_table = new TopTable();
+			
+			document.querySelectorAll('input').forEach(input => { input.maxLength = 20; })
+
+			start();
+		</script>
+	</body>
+</html>
