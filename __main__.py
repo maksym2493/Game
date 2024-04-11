@@ -1,5 +1,5 @@
 from Server import app
-from pyngrok import ngrok
+#from pyngrok import ngrok
 
 #public_link = ngrok.connect(5000)
 #print(public_link)
