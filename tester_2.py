@@ -11,7 +11,7 @@ from aiohttp import ClientSession
 
 class Client:
     def __init__(self):
-        self.api = 'http://192.168.1.8:5000/api/'
+        self.api = 'http://127.0.0.1:5000/api/'
         self.session = ClientSession()
     
     async def get(self, path, **params):
