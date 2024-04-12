@@ -114,17 +114,18 @@ class Game(Helper):
             
         nllogin = login.lower()
         ullogin = user['login'].lower()
-            
-        if login == user['login']: raise Exception('Логін вже використовується Вами.')
-        if self.data['logins'].get(nllogin) not in [None, user['user_id']]: raise Exception('Користувач з таким логіном вже існує.')
-            
-        self.check_login(login)
+        
+        with self.lock_manager.get_lock('register'):
+            if login == user['login']: raise Exception('Логін вже використовується Вами.')
+            if self.data['logins'].get(nllogin) not in [None, user['user_id']]: raise Exception('Користувач з таким логіном вже існує.')
+                
+            self.check_login(login)
 
-        if ullogin != nllogin:
-            del self.data['logins'][ullogin]
-            self.data['logins'][nllogin] = user['user_id']
+            if ullogin != nllogin:
+                del self.data['logins'][ullogin]
+                self.data['logins'][nllogin] = user['user_id']
 
-        user['login'] = login
+            user['login'] = login
             
         return
     
