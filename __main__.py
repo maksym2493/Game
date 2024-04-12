@@ -4,4 +4,4 @@ from Server import app
 #public_link = ngrok.connect(5000)
 #print(public_link)
 
-app.run(host = '0.0.0.0')
+app.run(host = '0.0.0.0', port = 5000)

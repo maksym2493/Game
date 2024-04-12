@@ -78,13 +78,13 @@ class Helper:
 
     def check_ip(self, ip):
         data = self.data['ips'].get(ip)
-        return data and len(data) >= 2 and False
+        return data and len(data) >= 2
     
     def reg_ip(self, ip, user):
         data = self.data['ips'].get(ip)
         if not data: data = []; self.data['ips'][ip] = data
 
-        data.append(user['user_id'])
+        self.data['ips'][ip].append(user['user_id'])
     
     def remove_ip(self, ip, user):
         data = self.data['ips'].get(ip)
