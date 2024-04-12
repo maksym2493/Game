@@ -42,7 +42,9 @@ class GameData(Helper):
             }
 
     def dump(self):
+        print('Start\n')
         dump(self.data, open('Data/data.json', 'w', encoding = 'utf-8'), ensure_ascii = False)
+        print('End\n')
 
     def add_shift(self, shifts, shift):
         for i, s in enumerate(shifts):
@@ -143,13 +145,9 @@ class GameData(Helper):
                         can = True
                         self.need_update = False
                 
-                if can:
-                    with self.lock_manager.get_lock('register'): self.dump()
+                if can: self.dump()
 
                 #print('All is good.')
-                sleep(10)
+                sleep(60)
         
         except Exception as e: open('f.txt', 'w', encoding = 'utf-8').write(str(e))
-        
-        finally:
-            with self.lock_manager.get_lock('register'): self.dump()

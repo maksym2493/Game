@@ -166,7 +166,7 @@ async def main():
             print()
             await client.close()
         
-        await asyncio.sleep(60)
+        await asyncio.sleep(10)
         
         process = await asyncio.create_subprocess_exec(
             'python', '__main__.py',
@@ -176,7 +176,7 @@ async def main():
         
         server_task = asyncio.create_task(process.communicate())
         
-        await asyncio.sleep(60)
+        await asyncio.sleep(5)
         
         error = 0
         requests = 0
